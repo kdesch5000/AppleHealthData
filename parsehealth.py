@@ -18,6 +18,7 @@ count =0
 #Init Health type value dictionary
 
 valdic ={}
+sourcedic ={}
 
 # loop through export.eml
 for line in healthlog:
@@ -32,6 +33,7 @@ for line in healthlog:
 		# get source of value			
 		sourceName =re.search(r"sourceName\S\S\S+\s+\S+",line)
                 sourceNameval = sourceName.group()
+		sourcedic [sourceNameval[12:]] = count
 
 		# Get value of record type 
 		healthdata = re.search(r"value\S\S\w+",line)
@@ -48,7 +50,7 @@ for line in healthlog:
 
 
 		# print progress hash
-		if count % 100 == 0:
+		if count % 1000 == 0:
 			print "#",
 			sys.stdout.flush()
 
@@ -57,7 +59,11 @@ healthlog.close()
 healthresults.close()
 
 #Print values parsed
+print "Health Values Captured"
 for key in valdic:
+	print key
+print "Device Sources of Health Data"
+for key in sourcedic:
 	print key
 
 

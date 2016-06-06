@@ -20,6 +20,10 @@ count =0
 valdic ={}
 sourcedic ={}
 
+#determine number of lines in export.xml
+num_lines = sum(1 for line in open("export.xml"))
+
+
 # loop through export.eml
 for line in healthlog:
 	#find record types
@@ -50,8 +54,8 @@ for line in healthlog:
 
 
 		# print progress hash
-		if count % 1000 == 0:
-			print "#",
+		if count % 10000 == 0:
+			print '{counts} of {nums}'.format(counts=count, nums=num_lines)
 			sys.stdout.flush()
 
 #Close files

@@ -1,7 +1,8 @@
 #!/usr/bin/python
 #Simple Python script to parse Apple Health Values out of the export.xml into a pipe delimited txt file
 
-import re, sys, os
+import re, sys, os, datetime
+from datetime import datetime
 
 # Assumes you run the script in same location as the exported data
 healthlog = open("export.xml","r")
@@ -23,6 +24,7 @@ sourcedic ={}
 #determine number of lines in export.xml
 num_lines = sum(1 for line in open("export.xml"))
 
+FMT = '%Y-%m-%d %H:%M:%S'
 
 # loop through export.eml
 for line in healthlog:
@@ -44,7 +46,13 @@ for line in healthlog:
                 if healthdata is None:
 			healthdata = "No Val"
 		else: 
-			healthdataval = healthdata.group()
+			if recordtypeval[15:-1] == "KCategoryTypeIdentifierSleepAnalysis":
+				starttime = re.search(r"startDate\S\S\d+\-\d+\-\d+\s+\d+\:\d+\:\d+",line)
+				endtime = re.search(r"endDate\S\S\d+\-\d+\-\d+\s+\d+\:\d+\:\d+",line)
+				tdelta = datetime.strptime(endtime.group()[9:], FMT) - datetime.strptime(starttime.group()[11:], FMT)  
+				healthdataval = "0000000" + str(tdelta)[:1]
+			else:
+				healthdataval = healthdata.group()
 
 		#Get end date/time of data collection 
 		datetime2 = re.search(r"endDate\S\S\d+\-\d+\-\d+\s+\d+\:\d+\:\d+",line)

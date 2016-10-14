@@ -41,8 +41,10 @@ for line in healthlog:
 
 		# Get value of record type 
 		healthdata = re.search(r"value\S\S\w+",line)
-                healthdataval = healthdata.group()
-
+                if healthdata is None:
+			healthdata = "No Val"
+		else: 
+			healthdataval = healthdata.group()
 
 		#Get end date/time of data collection 
 		datetime2 = re.search(r"endDate\S\S\d+\-\d+\-\d+\s+\d+\:\d+\:\d+",line)
